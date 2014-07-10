@@ -1,0 +1,14 @@
+{
+	"name": "harmonization",
+	"main": "app/main.js",
+	"ignore": [
+		".gitignore"
+	],
+	"dependencies": {
+		"threejs": "*",
+		"requirejs": "*",
+		"underscore": "*",
+		"Eventable": "*",
+		"bootstrap": "*"
+	}
+}
