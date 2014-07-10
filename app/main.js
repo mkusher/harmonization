@@ -1,28 +1,46 @@
 requirejs(['jquery', 
+	    'three',
 	    'services/scene', 
 	    'services/camera', 
 	    'services/character',
-	    'services/renderer'
+	    'services/renderer',
+	    'helpers/axis'
 	    ], 
-	    function($, scene, camera, character, renderer){
-	var geometry, material, mesh;
+function($, t, scene, camera, character, renderer, axis){
 	
-	geometry = new THREE.Geometry( );
+	var axisHelper = new t.AxisHelper( 500 ),
+		dragging = false, 
+		coords = {x: 0, y: 0, z: 0},
+		vector = new t.Vector3(100,-100,0),
+		speedX = 2,
+		speedY = 1.5;
+	scene.add( axisHelper );
 	
-	geometry.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
-	geometry.vertices.push( new THREE.Vector3( 500, 0, 0 ) );
-	geometry.vertices.push( new THREE.Vector3( 250, 5, 0 ) );
-	geometry.vertices.push( new THREE.Vector3( 250, -5, 0 ) );
-	
-	geometry.faces.push( new THREE.Face3( 0, 1, 2 ) );
-	geometry.faces.push( new THREE.Face3( 0, 1, 3 ) );
-	
-	geometry.computeBoundingSphere();
-	material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
-	mesh = new THREE.Mesh( geometry, material );
-	
-	
-	scene.add( mesh );
+	$(renderer.domElement).mousedown(function(e){
+		dragging = true;
+		coords = {x: e.pageX, y: e.pageY};
+	});
+	$(document).mouseup(function(e){
+		dragging = false;
+	})
+	.mousemove(function(e){
+		var delta;
+		if(dragging){
+			delta = new t.Vector3(
+				speedX*(- e.pageX + coords.x),
+				speedY*(e.pageY - coords.y),
+				vector.z
+			);
+			coords = {
+				x: e.pageX,
+				y: e.pageY
+			};
+			vector.add(delta);
+			camera.lookAt(vector);
+			renderer.render( scene, camera );
+		}
+	});
+	camera.lookAt(vector);
 	
 	renderer.render( scene, camera );
 });

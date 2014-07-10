@@ -1,4 +1,4 @@
-define(["underscore", './extend', 'eventable'], function(_, extend, E){
+define(["underscore", 'base/extend', 'eventable'], function(_, extend, E){
 	var Component = function(){
 		var params = {};
 		this.get = function(property){
